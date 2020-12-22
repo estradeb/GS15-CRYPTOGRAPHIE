@@ -10,13 +10,19 @@ for t in range(60 ,80) : K[t] = 0xAC52C1D5
 H = [0x67452301,0xefcdab89,0x98badcfe,0x10325476,0xc3d2e1f0]
 
 def prep_data(data):
-	x = ''
-	for n in range(len(data)):
-		x +='{0:08b}'.format(ord(data[n]))
-	#calcul de la longueur avant l'étape 1
-	longueur = len(x)
-	x = int(x,2)
-	#step 1
+	# Determine le type de data pour le traiter
+	if isinstance(data, str):
+		x = ''
+		for n in range(len(data)):
+			x +='{0:08b}'.format(ord(data[n]))
+		#calcul de la longueur avant l'étape 1
+		longueur = len(x)
+		x = int(x,2)
+		#step 1
+	elif isinstance(data, int):
+		x = data
+		longueur = x.bit_length()
+
 	x = x << 1 | 1 
 	# step 2
 	blocks = []
@@ -52,7 +58,7 @@ def SHA_1(data):
 	blocks = prep_data(data)
 	for block in blocks:
 		# etape 1
-		x = divide_bitwise(block, size=32)
+		x = divide_bitwise(block, blocSize=32)
 		# etape 2
 		for t in range(16,80):
 			x.append(leftRotation(x[t-3] ^ x[t-8] ^ x[t-14] ^ x[t-16]))
@@ -81,7 +87,9 @@ def SHA_1(data):
 
 
 
-data = "macron démissionne"
+# data = "macron démissionne  macron démissionne macron démissionne"
 
-
-# print([bin(i)[2:] for i in blocks])
+# print(SHA_1(data))
+'''
+retourne 160 bits
+'''

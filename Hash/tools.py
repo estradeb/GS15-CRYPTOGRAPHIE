@@ -13,9 +13,9 @@ def leftRotation(number, offset=1 ,size=32):
 def addition_mod32(a, b):	
 	return (a + b) % 4294967296
 
-def divide_bitwise(number, size):
+def divide_bitwise(number, blocSize):
 	blocks = []
 	while number != 0:
-		blocks.append(number & int('1'*size,2))
-		number = number >>size
+		blocks.append(number & int('1'*blocSize,2))
+		number = number >>blocSize
 	return blocks
