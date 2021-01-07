@@ -60,13 +60,10 @@ def ft(B,C,D):
 def SHA_1(data):
 	blocks = prep_data(data)
 	for block in blocks:
-		print(bin(block)[2:])
-		print(block.bit_length())
 		# etape 1
 		x = divide_bitwise(block, blocSize=32)
 		# etape 2
 		for t in range(16,80):
-			print("t", t)
 			x.append(leftRotation(x[t-3] ^ x[t-8] ^ x[t-14] ^ x[t-16]))
 
 		# etape 3
@@ -94,9 +91,9 @@ def SHA_1(data):
 
 
 
-data = " macron démission macron destructionmacron démission macron destructionmacron démission macron destructionmacron démission  mac"
+# data = " macron démission macron destructionmacron démission macron destructionmacron démission macron destructionmacron démission  mac"
 
-print(SHA_1(data))
+# print(SHA_1(data))
 '''
 retourne 160 bits
 '''
