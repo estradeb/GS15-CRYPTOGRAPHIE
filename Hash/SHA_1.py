@@ -1,6 +1,5 @@
 from tools import *
 
-
 K = [0] * 80
 for t in range(20):	K[t] = 0x5A827999 
 for t in range(20 ,40) : K[t] = 0x6ED9EBA1 
@@ -22,7 +21,6 @@ def prep_data(data):
 	elif isinstance(data, int):
 		x = data
 		longueur = x.bit_length()
-
 	x = x << 1 | 1 
 	# step 2
 	blocks = []
@@ -33,16 +31,21 @@ def prep_data(data):
 		# del 512 MSB si c'est possible
 		if bin(x)[512 + 2:] != '':
 			x = int(bin(x)[512 + 2:] ,2)
-		else :	break
-		iteration +=1
+		else :	
+			break
+		iteration = iteration + 1
 
-	#padding des LSB pour avoir 512 bits 
-	blocks[-1] = blocks[-1] << (512 - blocks[-1].bit_length())
-	# Test, est-ce qu'on a la place pour la longueur ?
-	if blocks[-1] & int('1'*64, 2) == 0:
+	#padding des LSB pour avoir 512 bits
+	# Test, est-ce qu'on a la place pour la longueur ? 
+	# Cas où il n'y pas la place
+	if 512 - blocks[-1].bit_length() <= 64:
+		blocks[-1] = blocks[-1] << (512 - blocks[-1].bit_length())
+		blocks.append(longueur << (512 - longueur.bit_length())) # ici padding illegal, on met longueur en MSB pour avoir un bloc de 512 bits
+	
+	# Cas où il y a la place
+	else:
+		blocks[-1] = blocks[-1] << (512 - blocks[-1].bit_length())
 		blocks[-1] = blocks[-1] | longueur
-	else : 
-		blocks.append(longueur)
 	return blocks
 
 def ft(B,C,D):
@@ -57,11 +60,15 @@ def ft(B,C,D):
 def SHA_1(data):
 	blocks = prep_data(data)
 	for block in blocks:
+		print(bin(block)[2:])
+		print(block.bit_length())
 		# etape 1
 		x = divide_bitwise(block, blocSize=32)
 		# etape 2
 		for t in range(16,80):
+			print("t", t)
 			x.append(leftRotation(x[t-3] ^ x[t-8] ^ x[t-14] ^ x[t-16]))
+
 		# etape 3
 		A, B, C, D, E = H
 		# etape 4
@@ -87,9 +94,9 @@ def SHA_1(data):
 
 
 
-# data = "macron démissionne  macron démissionne macron démissionne"
+data = " macron démission macron destructionmacron démission macron destructionmacron démission macron destructionmacron démission  mac"
 
-# print(SHA_1(data))
+print(SHA_1(data))
 '''
 retourne 160 bits
 '''
