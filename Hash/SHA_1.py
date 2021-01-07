@@ -45,7 +45,7 @@ def SHA_1(data):
 	for t in range(60 ,80) : K[t] = 0xAC52C1D5 
 
 	H = [0x67452301,0xefcdab89,0x98badcfe,0x10325476,0xc3d2e1f0]
-	
+
 	blocks = prep_data(data)
 	for block in blocks:
 		# etape 1
@@ -79,8 +79,3 @@ def SHA_1(data):
 	return result
 
 
-
-data = "macron démission macron destruction"
-print(hex(SHA_1(data)))
-data = "macron démission macron destruction"
-print(hex(SHA_1(data)))

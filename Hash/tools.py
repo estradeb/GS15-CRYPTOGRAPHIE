@@ -26,9 +26,3 @@ def divide_bitwise(number, blocSize, min_number_of_blocks=0):
 		blocks.append(0)
 	return blocks
 
-# def divide_bitwise(number, blocSize, total_blocSize):
-# 	blocks = []
-# 	while number != 0:
-# 		blocks.append(number & int('1'*blocSize,2))
-# 		number = number >>blocSize
-# 	return blocks
