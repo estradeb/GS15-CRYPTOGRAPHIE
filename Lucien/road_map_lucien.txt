@@ -1,0 +1,77 @@
+
+
+>>>>>>>>>>>>> Signature El Gamal : (demande p , par signataire)
+
+
+	Initialisation : 
+
+		Alice : 
+
+			: choisi p premier 512 bits
+			: alpha generateur de Zp
+			: choisi 1 <= x <= p-2
+			: calcule h = alpha ^ x mod p
+
+			: envoie {p, alpha, h}
+
+		Bob : 
+			: reçoit {p, alpha, h}
+
+	Signature d'un doc par Alice : 
+
+		: choisi 1 <= y <= p-2 ET PGCD(y, p-1) = 1
+
+		: calcule h_M = H(M)
+
+		: s(M) = { s1 , s2}
+
+			s1 = alpha ^ y mod p
+			s2 = y^-1 * (h_M - x*s1) mod p-1
+
+		: envoie {M, (s1,s2)}
+
+	Vérif par Bob : 
+
+		connait p, alpha, h
+		reçoit {~M, (s1, s2)}
+
+		: calcule h_~M = H(~M)			: alpha generateur de Zp
+
+
+		teste si :  (h ^ s1) * (s1 ^ s2 ) = alpha ^ h_~M mod p
+
+>>>>>>>>>>>>>>>>>> signature RSA  ( demande p et q (par signataire)) : 	
+
+
+	Initialisation : 
+
+		Alice : 
+			: choisit p et q  deux premiers
+			: phi(n) = (p-1)*(q-1)
+			: choisi entier e  impair tq 
+				 1 < e < phi(n)   ET PGCD( e , phi(n) ) = 1
+
+			: calcule d  inverse de e mod phi(n)
+			
+			: envoie à Bob : { n , e}
+
+		Bob : 
+			a reçu {n,e}
+
+	Signature d'un doc par Alice : 
+		
+		: h_M = H (M) 
+		: s(M) = (h_M) ^ d mod n
+
+		: envoie { M , s(M) }
+
+	Vérif signature par Bob : 
+		
+		reçoit { ~M, s(M)} et 
+
+		h_~m = H(~M)
+		check si : (s(M) ^ e) mod n = h_~m 
+
+
+	:::: nombre premier avec phi(n)
+	:::: calcul d'inverse dans Zp
