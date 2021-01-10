@@ -12,10 +12,9 @@ import pickle
 import blockchain
 from pip._vendor.pyparsing import originalTextFor
 
-#prime, alpha = gen_prime_et_alpha()
+
 prime, alpha = 9897945769718193639959984638000900286314127960826347487029072470408703069670883110279720785601634769147223130343953316018693873378437092702305231198650081, 7867969773067674666283917880578211989084312205422864583887419974689917662993740993709666012206421341523769293969182149676889796906645634003337407639637527
-# AlicePublicKey , AlicePrivateKey = gen_couple_cles_menu(prime, alpha)
-# print("Un couple de clés vous a été généré en prévision de vos opérations")
+
 
 PROMPT = ">>> "
 
@@ -34,7 +33,7 @@ def main_menu_sequence():
 		elif arg == '3':
 			gen_couple_cles_menu(prime, alpha)
 		elif arg == '4':
-			print("Voulez vous générer : \n->1<- Un hash \n->2<- une empreinte") 
+			print("Voulez vous générer : \n->1<- Un hash \n->2<- Une empreinte") 
 			arg = input(PROMPT)
 
 			if arg == '1':
@@ -188,19 +187,39 @@ def signature(prime, alpha):
 
 	# ECHANGE RSA
 	elif arg == '2':
-		public_key, private_key = RSA.init_alice()
-		print("Génération d'un couple de clés \n PUBLIC_KEY:", publickey, '\nPRIVATE_KEY', privatekey)
-		signature = RSA.text_signature(texte, private_key)
-		print("RESULTAT DE LA SIGNATURE PAR RSA AVEC UNE CLE PRIVEE: \n", signature)
+
+
+		print("Deux nombres copremiers ont déjà été stockés pour aller plus vite")
+		AlicePublicKey , AlicePrivateKey = RSA.init_alice(13332144011952475692844792665277339251038471684167210337080000835564590838277715004334349821463460988563502376804559805790138591307572695202210152239440283, 6666072005976237846422396332638669625519235842083605168540000417782295419138857502167174910731730494281751188402279902895069295653786347601105076119720141)
+		BobPublicKey, BobPrivateKey = RSA.init_alice(1577467455571380271454607668688925369906512098969436445939189470935532055802488990968232233070389803383199415953060598110246971828956721293333253157891483, 788733727785690135727303834344462684953256049484718222969594735467766027901244495484116116535194901691599707976530299055123485914478360646666626578945741)
 		
-		print("Vérificiation de la signature.\nVoulez vous essayer avec un message modifié ?\n->1<- Non \n->2<- Oui")
+		print("Qui est à l'origine du message ? \n->1<- Alice \n->2<- Bob")
+		arg = input(PROMPT)
+
+		if arg == '1':
+			print("Génération d'un couple de clés \n PUBLIC_KEY:", AlicePublicKey, '\nPRIVATE_KEY', AlicePrivateKey)
+			print("Signature RSA par la clé privée d'Alice")
+			signature = RSA.text_signature(texte, AlicePrivateKey)
+		if arg == '2':
+			print("Génération d'un couple de clés \n PUBLIC_KEY:", BobPublicKey, '\nPRIVATE_KEY', BobPrivateKey)
+			print("Signature RSA par la clé privée de Bob")
+			signature = RSA.text_signature(texte, BobPrivateKey)		
+		
+		print("RESULTAT DE LA SIGNATURE PAR RSA AVEC UNE CLE PRIVEE: \n", signature)
+		print("Vérificiation de la signature. Vérifier qu'Alice ou Bob est bien à la source du message ? \n->1<- Alice \n->2<- Bob")
 		arg = input(PROMPT)
 		if arg == '1': 
-			RSA.bob_signature_verification(unchecked_message=texte, signature=signature, public_key=public_key)
+			result = RSA.bob_signature_verification(unchecked_message=texte, signature=signature, public_key=AlicePublicKey)
+			origin = "Alice"
 		elif arg == '2':
-			print('Nouveau texte : GS15 est une très bonne matière')
-			texte = "GS15 est une très bonne matière"
-			RSA.bob_signature_verification(unchecked_message=texte, signature=signature, public_key=public_key)
+			result = RSA.bob_signature_verification(unchecked_message=texte, signature=signature, public_key=BobPublicKey)
+			origin = "Bob"
+
+		if result:
+			print("L'empreinte du message et l'empreinte issue du déchiffrement de la signature sont identiques")
+			print("Le message est intègre et " + origin + " en est bien l'auteur\n")
+		else:
+			print("L'intégrite et l'authentification du message n'ont pas pu être vérifiés\n")
 
 
 

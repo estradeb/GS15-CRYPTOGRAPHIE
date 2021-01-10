@@ -12,11 +12,7 @@ def compute_lcm(x, y):
 def is_coprime(a, b):
 	return compute_pgcd(a, b) == 1
 
-def init_alice():
-
-	# 1
-	print("Deux nombres copremiers ont déjà été stockés pour aller plus vite")
-	p , q = 13332144011952475692844792665277339251038471684167210337080000835564590838277715004334349821463460988563502376804559805790138591307572695202210152239440283, 6666072005976237846422396332638669625519235842083605168540000417782295419138857502167174910731730494281751188402279902895069295653786347601105076119720141
+def init_alice(p , q):
 
 	# 2
 	n = p * q
@@ -38,6 +34,8 @@ def init_alice():
 	public_key = e , n 
 	private_key = d, n
 	return public_key, private_key
+
+
 
 def text_signature(message, private_key):
 	d, n = private_key
