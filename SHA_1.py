@@ -52,17 +52,17 @@ def SHA_1(data):
 		x = divide_bitwise(block, blocSize=32, min_number_of_blocks = 16)
 		# etape 2
 		for t in range(16,80):
-			x.append(leftRotation(x[t-3] ^ x[t-8] ^ x[t-14] ^ x[t-16]))
+			x.append(leftRotation(x[t-3] ^ x[t-8] ^ x[t-14] ^ x[t-16], size=32))
 
 		# etape 3
 		A, B, C, D, E = H
 		# etape 4
 		temp = ft(B,C,D)
 		for t in range(80):
-			T = (((leftRotation(A, offset=5 ,size=32) + temp[t]) % 4294967296 + E ) % 4294967296 + x[t]  % 4294967296 + K[t] ) % 4294967296
+			T = (((leftRotation(A, numberOfBits=5 ,size=32) + temp[t]) % 4294967296 + E ) % 4294967296 + x[t]  % 4294967296 + K[t] ) % 4294967296
 			E=D
 			D=C
-			C = leftRotation(B, offset=30 ,size=32)
+			C = leftRotation(B, numberOfBits=30 ,size=32)
 			B=A
 			A=T
 

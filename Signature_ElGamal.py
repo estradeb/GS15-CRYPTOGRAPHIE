@@ -1,5 +1,5 @@
-from Clés import *
-import SHA_1
+from gen_cle import gen_premier, trouve_Zn, publickey, privatekey, power
+from SHA_1 import SHA_1
 import random
 
 #------------------------------ Fonctions pour trouver si deux nombres sont premiers entre eux
@@ -14,49 +14,47 @@ def premiers_entre_eux(a,b):
         return True
     return False
 
-#------------------------------ Génération Signature ElGamal 
+#------------------------------ Signature ElGamal avec la clé privée de l'émetteur
 
-def sign(h, alpha, prime):
+def sign(h, alpha, prime, secret):
 
     #Choisir un entier k random entre (2,prime-2) avec PGCD(k,(prime-1)) = 1
-    k = randint(2, prime-2)
+    k = random.randint(2, prime-2)
     while not premiers_entre_eux(k, prime-1):
-        k = randint(2, prime-2)
-    print("k =", k)
+        k = random.randint(2, prime-2)
 
     #S1
     s1=power(alpha, k, prime)
-    print("s1 :", s1)
 
     #S2
     k_1 = pow(k, -1, prime-1)
     s2 = ((h-secret*s1)*k_1) % (prime-1)
-    print("s2 :", s2)
-    print("")
-    
+     
+    #renvoie la signature digitale qui est publique  
     return s1, s2
 
-#------------------------------ Vérification signature ElGamal 
+#------------------------------ Vérification signature ElGamal avec la clé publique de l'émetteur
 
-def verif(h, alpha, prime, s1,s2):
+def verif(h, alpha, prime, s1,s2, pk):
 
     v1 = power(alpha, h, prime)
-    print("v1 = ", v1)
 
     v2 = (power(pk, s1, prime)*power(s1, s2, prime)) % prime
-    print("v2 = ", v2)
-    print("")
 
     if 0 < s1 < prime and 0 < s2 < prime-1:
         if v1 == v2:
-            print("Vérification de la signature réussie par Bob le contrôleur")
+            print("Message intact !!")
             return True
         else:
-            print("vérification ratée")
+            print("Message pas intact")
             return False
-
+        
+        
+#------------------------------
 #------------------------------ Initialisation
+#------------------------------
 
+'''
 #Hash du message
 data = "Macron"
 print("Message :", data)
@@ -74,18 +72,15 @@ alpha=trouve_Zn(prime)
 Alice = publickey(prime, alpha)
 pk=Alice[0]
 secret=Alice[1]
-print("public key = ", pk)
-print("secret = ", secret)
-print("")
 
-#------------- Signature :
-
-#Signature du message
-s = sign(h, alpha, prime)
+#Signature du message avec le secret d'Alice
+s = sign(h, alpha, prime, secret)
 s1 = s[0]
 s2 = s[1]
+print("s1 :", s1)
+print("s2 :", s2)
 
-#Vérification de la signature
-verif(h, alpha, prime, s1, s2)
-        
+#Vérification de la signature avec la clé publique d'Alice
+print("Vérification de la signature :", verif(h, alpha, prime, s1, s2, pk))
+'''        
 

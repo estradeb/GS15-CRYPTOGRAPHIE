@@ -1,5 +1,4 @@
-from tools_RSA import *
-from SHA_1 import *
+from SHA_1 import SHA_1
 
 def compute_pgcd(a, b):
 	while b != 0:
@@ -16,6 +15,7 @@ def is_coprime(a, b):
 def init_alice():
 
 	# 1
+	print("Deux nombres copremiers ont déjà été stockés pour aller plus vite")
 	p , q = 13332144011952475692844792665277339251038471684167210337080000835564590838277715004334349821463460988563502376804559805790138591307572695202210152239440283, 6666072005976237846422396332638669625519235842083605168540000417782295419138857502167174910731730494281751188402279902895069295653786347601105076119720141
 
 	# 2
@@ -35,14 +35,18 @@ def init_alice():
 	d = pow(e, -1, lambda_n)
 
 	# n et e sont transmis à bob
-	return n, e, d
+	public_key = e , n 
+	private_key = d, n
+	return public_key, private_key
 
-def text_signature(message, d, n):
+def text_signature(message, private_key):
+	d, n = private_key
 	Hash = SHA_1(message)
 	return pow(Hash, d, mod=n)
 
-def bob_signature_verification(unchecked_message, signature):
-	Hash = SHA_1(message)
+def bob_signature_verification(unchecked_message, signature, public_key):
+	e, n = public_key
+	Hash = SHA_1(unchecked_message)
 	if  pow(signature, e, mod=n) == Hash:
 		print("message intacte !!!")
 		return True
@@ -50,15 +54,13 @@ def bob_signature_verification(unchecked_message, signature):
 		print("message pas intacte")
 		return False
 
-message = "macron démission"
 
-n, e, d = init_alice()
-print("n = " , n)
-print("e = " , e)
-print("d = " , d)
 
-signature = text_signature(message, d, n)
-print("signature = " , signature)
+# public_key, private_key = init_alice()
 
-bob_signature_verification(unchecked_message=message, signature=signature)
+# signature = text_signature(message, private_key)
+
+# print("signature = " , signature)
+
+# bob_signature_verification(unchecked_message=message, signature=signature)
 
