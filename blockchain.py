@@ -458,3 +458,4 @@ def main(prime, alpha):
     #Affichage blockchain et menu
     blockchain.display()
     blockchain.play()
+

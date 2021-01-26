@@ -1,4 +1,3 @@
-
 import random  
 from random import randint, shuffle, choice
 import pickle
@@ -234,4 +233,3 @@ print("Secret de Rémi : ", RemiSecret)
 print("")
 
 '''
-        

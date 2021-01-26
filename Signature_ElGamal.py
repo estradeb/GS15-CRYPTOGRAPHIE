@@ -40,18 +40,19 @@ def verif(h, alpha, prime, s1,s2, pk):
 
     #empreinte du message avec la même fonction de hashage
     v1 = power(alpha, h, prime)
-    
+
     #empreinte issue du déchiffrement de la signature avec clé publique de l'émetteur
     v2 = (power(pk, s1, prime)*power(s1, s2, prime)) % prime
     
     #Comparaison des deux empreintes
+
     if 0 < s1 < prime and 0 < s2 < prime-1:
         if v1 == v2:
             return True
         else:
             print("Echec de la vérification de la signature")
             return False
-             
+
 #------------------------------
 #------------------------------ Initialisation
 #------------------------------
