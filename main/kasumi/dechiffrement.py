@@ -1,10 +1,10 @@
-from RC4 import *
-from tools import *
-from chiffrement import *
+from .chiffrement import *
+from ressources.tools import *
+import ressources.RC4 as RC4
 
 def kasumi_decrypt_ECB(encrypted_content, master_key):
 	#initialisation 
-	Sbox1, Sbox2 = get_Sbox_from_key(master_key)
+	Sbox1, Sbox2 = RC4.get_Sbox_from_key(master_key)
 	sub_blocs_en , offset = encrypted_content
 	KL, KO, KI = prep_keys(master_key) #les sous clés sont en 16 bits
 	clear_text = 0
@@ -29,7 +29,7 @@ def kasumi_decrypt_ECB(encrypted_content, master_key):
 
 def kasumi_decrypt_CBC(encrypted_content, master_key):
 	#initialisation 
-	Sbox1, Sbox2 = get_Sbox_from_key(master_key)
+	Sbox1, Sbox2 = RC4.get_Sbox_from_key(master_key)
 	sub_blocs_en , offset = encrypted_content	
 	KL, KO, KI = prep_keys(master_key)
 	#Les valeurs du vecteur initial sont prises de manière arbitraire
@@ -65,7 +65,7 @@ def kasumi_decrypt_CBC(encrypted_content, master_key):
 
 def kasumi_decrypt_PCBC(encrypted_content, master_key):
 	#initialisation 
-	Sbox1, Sbox2 = get_Sbox_from_key(master_key)
+	Sbox1, Sbox2 = RC4.get_Sbox_from_key(master_key)
 	sub_blocs_en , offset = encrypted_content	
 	KL, KO, KI = prep_keys(master_key) 
 	clear_text = 0

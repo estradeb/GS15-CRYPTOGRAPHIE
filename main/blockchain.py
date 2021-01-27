@@ -1,13 +1,11 @@
-import SHA_1
+import main.hash.SHA_1 as SHA_1
 from datetime import datetime
 import random
-from Clés import *
-import Clés
-import Signature_ElGamal
-#from test.test_buffer import verify_structure
+from main.asymmetric.Clés import publickey
+import main.asymmetric.Signature_ElGamal as Signature_ElGamal
 
+#couple générateur et nombre premier pré-généré
 prime, alpha = 9897945769718193639959984638000900286314127960826347487029072470408703069670883110279720785601634769147223130343953316018693873378437092702305231198650081, 7867969773067674666283917880578211989084312205422864583887419974689917662993740993709666012206421341523769293969182149676889796906645634003337407639637527
-
 
 #Classe pour la création des utilisateurs (user : nom, argent, clé secrète, clé publique)
 class User(object):

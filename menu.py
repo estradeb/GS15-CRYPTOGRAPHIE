@@ -1,17 +1,17 @@
 """
 interface utilisateur
 """
-from chiffrement import *
-from dechiffrement import *
-from gen_cle import gen_premier, trouve_Zn, publickey, privatekey
-from SHA_1 import SHA_1
-from fonction_eponge import eponge
-import Signature_ElGamal
-import RSA
+from main.kasumi.chiffrement import *
+from main.kasumi.dechiffrement import *
+from main.asymmetric.Clés import gen_premier, trouve_Zn, publickey, privatekey
+from main.hash.fonction_eponge import eponge 
+from main.hash.SHA_1 import SHA_1
+import main.asymmetric.Signature_ElGamal as Signature_ElGamal
+import main.asymmetric.RSA as RSA
 import pickle
-import blockchain
-from pip._vendor.pyparsing import originalTextFor
-
+import main.blockchain as blockchain
+# from pip._vendor.pyparsing import originalTextFor
+import ressources.ascii_art as ascii_art
 
 prime, alpha = 9897945769718193639959984638000900286314127960826347487029072470408703069670883110279720785601634769147223130343953316018693873378437092702305231198650081, 7867969773067674666283917880578211989084312205422864583887419974689917662993740993709666012206421341523769293969182149676889796906645634003337407639637527
 
@@ -19,52 +19,52 @@ prime, alpha = 98979457697181936399599846380009002863141279608263474870290724704
 PROMPT = ">>> "
 
 def main_menu_sequence():
-	print("CHARGEMENT ...")
-	print("-----------------*")
+	ascii_art.title()
 
 	while True:
-		MENU_SEQUENCE = "Bonjour ô maître Rémi ! Que souhaitez vous faire aujourd’hui ?\n ->1<- Chiffrer un message.\n ->2<- Déchiffrer un message.\n ->3<- Générer des couples de clés publiques / privées.\n ->4<- Générer un hash / générer et vérifier une empreinte.\n ->5<- Enter dans le menu de gestion de la blockchain"
+		MENU_SEQUENCE = "Bonjour ô maître Rémi ! Que souhaitez vous faire aujourd’hui ?\n ->1<- Chiffrer un message.\n ->2<- Déchiffrer un message.\n ->3<- Générer des couples de clés publiques / privées.\n ->4<- Générer un hash / générer et vérifier une signature.\n ->5<- Enter dans le menu de gestion de la blockchain"
 		print(MENU_SEQUENCE)
 		arg = input(PROMPT)
 		if arg == '1': 
-			kasumi_encrypt_menu()
+			try:
+				kasumi_encrypt_menu()
+			except Exception as e:
+				print("L'opération n'a pas réussi")
+				
 		elif arg == '2':
-			kasumi_decrypt_menu()
+			try:
+				kasumi_decrypt_menu()
+			except Exception as e:
+				print("L'opération n'a pas réussi")
 		elif arg == '3':
+			prime , alpha = gen_prime_et_alpha()
 			gen_couple_cles_menu(prime, alpha)
 		elif arg == '4':
-			print("Voulez vous générer : \n->1<- Un hash \n->2<- Une empreinte") 
+			print("Voulez vous générer : \n->1<- Un hash \n->2<- Une signature") 
 			arg = input(PROMPT)
 
 			if arg == '1':
 				hash_menu()
 			elif arg == '2':
-				signature(prime, alpha)
+				signature()
 
 		elif arg == '5':
 			blockchain.main(prime, alpha)
-		# elif arg == '6':
-		# 	pass
-		# elif arg == '7':
-		# 	pass
-		# elif arg == '8':
-		# 	pass
-		# elif arg == '9':
-		# 	pass
+
 
 def kasumi_encrypt_menu():
 	print("Entrez ici votre clé de chiffrement (ATTENTION, ELLE DOIT ETRE AU MINIMUM DE 16 CARACTERES:") 
 	key = input(PROMPT)
 
 	# KASUMI ENCRYPT
-	print("Voulez vous \n->1<- écrire le texte à chiffrer ici \n->2<- Chiffrer le texte dans le fichier \"texte_a_chiffrer\"")
+	print("Voulez vous \n->1<- écrire le texte à chiffrer ici \n->2<- Chiffrer le texte dans le fichier \"output\\texte_a_chiffrer\"")
 	arg = input(PROMPT)
 
 	if arg == '1':
 		print("Quel texte voulez vous chiffrer :")
 		content = input(PROMPT)
 	elif arg == '2':
-		f=open("texte_a_chiffrer.txt", "r")
+		f=open("output\\texte_a_chiffrer.txt", "r")
 		if f.mode == 'r':
 			content =f.read()
 			print("Le texte à chiffrer est :\n", content)
@@ -80,18 +80,18 @@ def kasumi_encrypt_menu():
 
 	print("Resultat du chiffrement : ", encrypted_content)
 
-	with open('texte_chiffré.txt', 'wb') as f:
+	with open('output\\texte_chiffré.txt', 'wb') as f:
 		pickle.dump(encrypted_content, f)
 
-	print("Votre chiffré se retrouve dans le fichier \"texte_chiffré\"")
+	print("Votre chiffré se retrouve dans le fichier \"output\\texte_chiffré\"")
 
 def kasumi_decrypt_menu():
 	print("Entrez ici votre clé de déchiffrement :") 
 	key = input(PROMPT)
 
-	print("ATTENTION, le texte à déchiffrer DOIT se trouver dans le fichier \"texte_chiffré.txt\"")
+	print("ATTENTION, le texte à déchiffrer DOIT se trouver dans le fichier \"output\\texte_chiffré.txt\"")
 	
-	with open("texte_chiffré.txt", "rb") as f:
+	with open("output\\texte_chiffré.txt", "rb") as f:
 		encrypted_content = pickle.load(f)
 
 	print("Le texte à déchiffrer est :\n", encrypted_content)
@@ -108,11 +108,13 @@ def kasumi_decrypt_menu():
 	print("Resultat du déchiffrement : ", decrypted_content)
 
 def gen_prime_et_alpha():
+	print("Génération d'un nombre premier")
 	prime=gen_premier()
 	print("Le nombre n suivant est PREMIER :", prime)
 	print("")
 
 	#Trouver élément générateur de Zprime
+	print("Création d'un générateur")
 	alpha=trouve_Zn(prime)
 	print("Un élement générateur de Zn :", alpha)
 	print("")
@@ -126,14 +128,14 @@ def gen_couple_cles_menu(prime, alpha):
 	AliceSecret = clés_alice[1]
 	AlicePrivateKey = privatekey(AlicePublicKey, prime, AliceSecret)
 
-	print( "GENERATION DE CLE\n-------------------------*\nCLE PUBLIC : \n", AlicePublicKey,"\n-------------------------*\nCLE PRIVEE : \n", AlicePrivateKey)
-	print("\n\nCes clés ont été sauvegardées dans \"generated_public_key\" et \"generated_private_key\"\n")
-	with open('generated_public_key.txt','wb') as fichier:
+	print( "GENERATION DE CLE\n-------------------------*\nCLE PUBLIC : \n",AlicePublicKey,"\n-------------------------*\nCLE PRIVEE : \n",AlicePrivateKey)
+	print("\n\nCes clés ont été sauvegardées dans \"output\\generated_public_key\" et \"ouput\\generated_private_key\"\n")
+	with open('output\\generated_public_key.txt','wb') as fichier:
 		mon_pickler=pickle.Pickler(fichier)
 		mon_pickler.dump(AlicePublicKey)
 	
 	#stockage secrets
-	with open('generated_private_key.txt','wb') as fichier2:
+	with open('output\\generated_private_key.txt','wb') as fichier2:
 		pickler=pickle.Pickler(fichier2)
 		pickler.dump(AliceSecret)
 	return AlicePublicKey , AlicePrivateKey, AliceSecret
@@ -149,7 +151,7 @@ def hash_menu():
 	elif arg == '2':
 		print("Resultat du hash :\n",eponge(texte),"\n")
 
-def signature(prime, alpha):
+def signature():
 	print("Entrez le texte à signer") 
 	texte = input(PROMPT)
 	print("Quel type de signature ? \n->1<- El-Gamal \n->2<- RSA") 
@@ -163,6 +165,7 @@ def signature(prime, alpha):
 		origin = "none"
 		s1 = 0
 		s2 = 0
+		prime , alpha = gen_prime_et_alpha()
 		AlicePublicKey , AlicePrivateKey, AliceSecret = gen_couple_cles_menu(prime, alpha)
 		BobPublicKey , BobPrivateKey, BobSecret = gen_couple_cles_menu(prime, alpha)
 		if source == 1 :
@@ -170,7 +173,7 @@ def signature(prime, alpha):
 		elif source == 2 :
 			s1, s2 = Signature_ElGamal.sign(texte_hashé, alpha, prime, BobSecret)
 		print("La signature est la suivante :", s1, s2)	
-		print("Vérifier qu'Alice ou Bob est bien à la source du message ? \n->1<- Alice \n->2<- Bob")
+		print("Vous avez la possibilité de vérifier qu'Alice ou Bob est bien à la source du message. Avec quelle clé publique voulez vous faire cette vérification ? \n->1<- Alice \n->2<- Bob")
 		arg = input(PROMPT)
 		if arg == '1': 
 			verif = Signature_ElGamal.verif(SHA_1(texte), alpha, prime, s1, s2 , AlicePublicKey)
@@ -179,10 +182,10 @@ def signature(prime, alpha):
 			verif = Signature_ElGamal.verif(SHA_1(texte), alpha, prime, s1, s2 , BobPublicKey)
 			origin = "Bob"
 		if verif == True:
-			print("L'empreinte du message et l'empreinte issue du déchiffrement de la signature sont identiques")
+			print("La signature est vérifiée")
 			print("Le message est intègre et " + origin + " en est bien l'auteur\n")
 		else:
-			print("L'intégrite et l'authentification du message n'ont pas pu être vérifiés\n")
+			print("L'intégrité et l'authentification du message n'ont pas pu être vérifiés\n")
 
 
 	# ECHANGE RSA
@@ -206,7 +209,7 @@ def signature(prime, alpha):
 			signature = RSA.text_signature(texte, BobPrivateKey)		
 		
 		print("RESULTAT DE LA SIGNATURE PAR RSA AVEC UNE CLE PRIVEE: \n", signature)
-		print("Vérificiation de la signature. Vérifier qu'Alice ou Bob est bien à la source du message ? \n->1<- Alice \n->2<- Bob")
+		print("Vous avez la possibilité de vérifier qu'Alice ou Bob est bien à la source du message. Avec quelle clé publique voulez vous faire cette vérification ? \n->1<- Alice \n->2<- Bob")
 		arg = input(PROMPT)
 		if arg == '1': 
 			result = RSA.bob_signature_verification(unchecked_message=texte, signature=signature, public_key=AlicePublicKey)
@@ -216,10 +219,10 @@ def signature(prime, alpha):
 			origin = "Bob"
 
 		if result:
-			print("L'empreinte du message et l'empreinte issue du déchiffrement de la signature sont identiques")
+			print("La signature est vérifiée")
 			print("Le message est intègre et " + origin + " en est bien l'auteur\n")
 		else:
-			print("L'intégrite et l'authentification du message n'ont pas pu être vérifiés\n")
+			print("L'intégrité et l'authentification du message n'ont pas pu être vérifiés\n")
 
 
 

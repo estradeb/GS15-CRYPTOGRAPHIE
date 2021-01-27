@@ -1,6 +1,6 @@
 import math
-from tools import *
-from SHA_1 import *
+from ressources.tools import *
+from .SHA_1 import *
 
 def eponge(data):
 	etat = 0
@@ -25,7 +25,7 @@ def eponge(data):
 	#*---------------*
 	# Essorage
 	sortie = 0
-	for iteration in range(len(blocs)):
+	for iteration in range(6):
 		# Concaténation de des bit_rates
 		sortie = sortie << r_length | (etat >> c_length) 
 		état = SHA_1(etat)

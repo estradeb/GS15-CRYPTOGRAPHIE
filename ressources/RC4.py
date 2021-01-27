@@ -1,8 +1,7 @@
 import random
 import string
-from  kasumi_tools import *
-from tools import *
-import string
+import main.kasumi.kasumi_tools as kt
+import ressources.tools as tls
 
 def RC4(key, input):
 	n = len(key)
@@ -33,31 +32,31 @@ def get_random_RC4_Sbox(length):
 
 def get_Sbox_from_key(key):
 	#initialisation
-	KL, KO, KI = prep_keys(key)
+	KL, KO, KI = kt.prep_keys(key)
 	temp = 0
 	C = [37144, 22549, 2172, 25078, 407, 20225, 38393, 47277]
 
 	 #*----------------------*
 	for sub_key in KL:
 		for item in sub_key:
-			temp = merge(temp, item, 16)
+			temp = tls.merge(temp, item, 16)
 	for sub_key in KO:
 		for item in sub_key:
-			temp = merge(temp, item, 16)
+			temp = tls.merge(temp, item, 16)
 	for sub_key in KI:
 		for item in sub_key:
-			temp = merge(temp, item, 16)
+			temp = tls.merge(temp, item, 16)
 	key1 =  str(temp)[:256]
 
 	for sub_key in KO:
 		for item in sub_key:
-			temp = merge(temp, item, 16)
+			temp = tls.merge(temp, item, 16)
 	for sub_key in KI:
 		for item in sub_key:
-			temp = merge(temp, item, 16)
+			temp = tls.merge(temp, item, 16)
 	for sub_key in KL:
 		for item in sub_key:
-			temp = merge(temp, item, 16)
+			temp = tls.merge(temp, item, 16)
 	key2 = str(temp)[:256]
 	
 	return RC4(key1, key2), RC4(key2,key1)

@@ -1,7 +1,4 @@
-from tools import *
-
-
-
+from ressources.tools import *
 
 def prep_data(data):
 	# Determine le type de data pour le traiter

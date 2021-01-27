@@ -1,10 +1,11 @@
-from RC4 import *
-from tools import *
-from kasumi_tools import *
+
+from ressources.tools import *
+from main.kasumi.kasumi_tools import *
+import ressources.RC4 as RC4
 
 def kasumi_encrypt_ECB(texte, master_key):
 	#initialisation 
-	Sbox1, Sbox2 = get_Sbox_from_key(master_key)
+	Sbox1, Sbox2 = RC4.get_Sbox_from_key(master_key)
 	#Le offset est utilisé pour la concaténation finale des blocs en clair lors du déchiffrement 
 	sub_blocs, offset = prep_bloc(texte)
 	KL, KO, KI = prep_keys(master_key) #les sous clés sont en 16 bits
@@ -24,7 +25,7 @@ def kasumi_encrypt_ECB(texte, master_key):
 
 def kasumi_encrypt_CBC(texte, master_key):
 	#initialisation 
-	Sbox1, Sbox2 = get_Sbox_from_key(master_key)
+	Sbox1, Sbox2 = RC4.get_Sbox_from_key(master_key)
 	sub_blocs, offset = prep_bloc(texte) 
 	KL, KO, KI = prep_keys(master_key) 
 	sub_blocs_en = []
@@ -50,7 +51,7 @@ def kasumi_encrypt_CBC(texte, master_key):
 
 def kasumi_encrypt_PCBC(texte, master_key):
 	#initialisation 
-	Sbox1, Sbox2 = get_Sbox_from_key(master_key)
+	Sbox1, Sbox2 = RC4.get_Sbox_from_key(master_key)
 	sub_blocs, offset = prep_bloc(texte) 
 	KL, KO, KI = prep_keys(master_key) 
 	sub_blocs_en = []

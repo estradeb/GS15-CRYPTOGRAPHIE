@@ -1,4 +1,4 @@
-from SHA_1 import SHA_1
+from main.hash.SHA_1 import SHA_1
 
 def compute_pgcd(a, b):
 	while b != 0:
@@ -51,14 +51,4 @@ def bob_signature_verification(unchecked_message, signature, public_key):
 	else:
 		print("message pas intacte")
 		return False
-
-
-
-# public_key, private_key = init_alice()
-
-# signature = text_signature(message, private_key)
-
-# print("signature = " , signature)
-
-# bob_signature_verification(unchecked_message=message, signature=signature)
 

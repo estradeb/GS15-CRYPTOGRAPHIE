@@ -1,6 +1,5 @@
 from pyfinite import ffield
 
-
 def text_to_bits(text, encoding='utf-8', errors='surrogatepass'):
     bits = bin(int.from_bytes(text.encode(encoding, errors), 'big'))[2:]
     return bits.zfill(8 * ((len(bits) + 7) // 8))
@@ -19,7 +18,6 @@ def split(bloc, splitPos=16, blockSize=32):
 	right = int(right , 2)
 	return left, right #ressort ici en base 10
 	
-
 def merge(left, right, rightNbOfBits):
 	result = bin(left)[2:] + bin(right)[2:].zfill(rightNbOfBits)
 	return int(result, 2)
@@ -28,7 +26,6 @@ def inversion_I(a):
 	F = ffield.FField(15)
 	a_inverse = F.Inverse(a)
 	return a_inverse 
-
 
 def forgeBinary(number, size=32):
 	return bin(number)[2:].zfill(size)[-size:] #zfill pour le padding et [-size:] pour s'assurer que le bloc 32 de taille
