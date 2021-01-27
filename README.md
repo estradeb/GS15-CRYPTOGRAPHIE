@@ -1,5 +1,4 @@
-# GS15
-
+GS15 est une matière de Cryptographie à l'université de technologie de Troyes (UTT)
 
 
 Utilisation du module BlockChain
