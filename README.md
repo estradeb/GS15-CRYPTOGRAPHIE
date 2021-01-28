@@ -3,7 +3,7 @@
   </a>
   
 ## A propos
-*GS15 est une matière de Cryptographie à l'université de technologie de Troyes (UTT) enseignée par Rémi COGRANE. Le projet consiste en l'implémentation de diverses fonctions :* 
+*GS15 est une matière de Cryptographie à l'université de technologie de Troyes (UTT) enseignée par Rémi COGRANNE. Le projet consiste en l'implémentation de diverses fonctions :* 
 
 * Chiffrement Kasumi (modifié)
 * RC4
