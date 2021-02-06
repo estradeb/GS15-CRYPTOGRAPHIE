@@ -13,10 +13,10 @@
 * El-Gamal
 * Une blockchain
 
-> **ATTENTION : Aucune des implémentations ici n'est sécurisée. Elles  doivent être utilisée uniquement à des fins pédagogique !**
+> **ATTENTION : Aucune des implémentations ici n'est sécurisée. Elles  doivent être utilisées uniquement à des fins pédagogique !**
 
 ## Sommaire
-  * **main** : comprend les algorithmes principaux classés par type (chiffrement symmétrique, chiffrement asymmétrique, Hachage et BlocChain)
+  * **main** : comprend les algorithmes principaux classés par type (chiffrement symmétrique, chiffrement asymmétrique, Hachage et BlockChain)
   * **ressources** : comprend des scripts d'opération basiques sur les bits ainsi que l'algorithme RC4.
   * **output** : contient les textes chiffrés ainsi que les clés générées
  
@@ -24,9 +24,9 @@
   Dépendance :
       Installez le package `pyfinite` avec la commande `pip install pyfinite` (si vous êtes sur linux, pensez à utiliser plutot pip3)
   1. Clonez le dépôt dans un répertoire
-  2. Executé le fichier "**menu.py**" avec une console python 3
+  2. Executez le fichier "**menu.py**" avec une console python 3
 
-## Résolution de problème
+## Résolution de problèmes
 #### Dépendance
 Pyfinite est utilisé pour une inversion dans un corps de Gallois (facultative) dans l'implémentation de Kasumi. Le package n'utilise pas de dépendance pour les opérations binaires
 #### Utilisation de la BlockChain
